@@ -28,9 +28,10 @@ import argparse
 import os
 import sys
 from pathlib import Path
-
+import streamlit as st
 import torch
 import torch.backends.cudnn as cudnn
+from PIL import Image
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -44,7 +45,25 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
                            increment_path, non_max_suppression, print_args, scale_coords, strip_optimizer, xyxy2xywh)
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
+import streamlit as st
 
+def get_subdirs(b='.'):
+    '''
+        Returns all sub-directories in a specific Path
+    '''
+    result = []
+    for d in os.listdir(b):
+        bd = os.path.join(b, d)
+        if os.path.isdir(bd):
+            result.append(bd)
+    return result
+
+
+def get_detection_folder():
+    '''
+        Returns the latest folder in a runs\detect
+    '''
+    return max(get_subdirs(os.path.join('runs', 'detect')), key=os.path.getmtime)
 
 @torch.no_grad()
 def run(
@@ -249,4 +268,51 @@ def main(opt):
 
 if __name__ == "__main__":
     opt = parse_opt()
-    main(opt)
+    st.title('YOLOv5 Streamlit App')
+    source = ("图片检测", "视频检测")
+    source_index = st.sidebar.selectbox("选择输入", range(
+        len(source)), format_func=lambda x: source[x])
+
+    if source_index == 0:
+        uploaded_file = st.sidebar.file_uploader(
+            "上传图片", type=['png', 'jpeg', 'jpg'])
+        if uploaded_file is not None:
+            is_valid = True
+            with st.spinner(text='资源加载中...'):
+                st.sidebar.image(uploaded_file)
+                picture = Image.open(uploaded_file)
+                picture = picture.save(f'data/images/{uploaded_file.name}')
+                opt.source = f'data/images/{uploaded_file.name}'
+        else:
+            is_valid = False
+    else:
+        uploaded_file = st.sidebar.file_uploader("上传视频", type=['mp4'])
+        if uploaded_file is not None:
+            is_valid = True
+            with st.spinner(text='资源加载中...'):
+                st.sidebar.video(uploaded_file)
+                with open(os.path.join("data", "videos", uploaded_file.name), "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                opt.source = f'data/videos/{uploaded_file.name}'
+        else:
+            is_valid = False
+
+    if is_valid:
+        print('valid')
+        if st.button('开始检测'):
+            main(opt)
+
+            if source_index == 0:
+                with st.spinner(text='Preparing Images'):
+                    for img in os.listdir(get_detection_folder()):
+                        st.image(str(Path(f'{get_detection_folder()}') / img))
+
+                    st.balloons()
+            else:
+                with st.spinner(text='Preparing Video'):
+                    for vid in os.listdir(get_detection_folder()):
+                        st.video(str(Path(f'{get_detection_folder()}') / vid))
+
+                    st.balloons()
+
+
