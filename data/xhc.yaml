@@ -1,0 +1,5 @@
+train: xhc/train/images
+val: xhc/valid/images
+
+nc: 70
+names: ['apple', 'banana', 'bed', 'bicycle', 'bird', 'book', 'bottle', 'bridge', 'building', 'cake', 'car', 'case', 'cat', 'chair', 'clock', 'closet', 'cloud', 'computer', 'dog', 'door', 'firefly', 'fireworks', 'flames', 'flower', 'football', 'fork', 'glass', 'grass', 'hat', 'hotdog', 'house', 'knife', 'lake', 'lamp', 'leaf', 'maple', 'meteor', 'moon', 'orange', 'people', 'phone', 'pizza', 'plane', 'pot', 'rail', 'rain', 'refrigerator', 'sakura', 'ship', 'sign', 'skateboard', 'smoke', 'snow', 'snowflake', 'sofa', 'spoon', 'stairs', 'star', 'sun', 'table', 'tin', 'toothbrush', 'tower', 'traffic light', 'train', 'tree', 'tv', 'umbrella', 'vase', 'watertap']
