@@ -22,6 +22,8 @@ Usage - formats:
                                          yolov5s.pb                 # TensorFlow GraphDef
                                          yolov5s.tflite             # TensorFlow Lite
                                          yolov5s_edgetpu.tflite     # TensorFlow Edge TPU
+
+streamlit deploy: https://share.streamlit.io/2462210248/yolov5/detect.py
 """
 
 import argparse
@@ -268,7 +270,7 @@ def main(opt):
 
 if __name__ == "__main__":
     opt = parse_opt()
-    st.title('YOLOv5 Streamlit App')
+    st.title('YOLOv5 Animation detection Streamlit App')
     source = ("图片检测", "视频检测")
     source_index = st.sidebar.selectbox("选择输入", range(
         len(source)), format_func=lambda x: source[x])
