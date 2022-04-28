@@ -275,7 +275,7 @@ if __name__ == "__main__":
     source = ("Images Detection", "Video Detection")
     source_index = st.sidebar.selectbox("input", range(
         len(source)), format_func=lambda x: source[x])
-    bg_image = Image.open('bg.jpg')
+    bg_image = Image.open('D:\PycharmProjects\test1\yolov5\bg.jpg')
     st.image(bg_image)
     if source_index == 0:
         uploaded_file = st.sidebar.file_uploader(
